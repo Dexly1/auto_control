@@ -1,8 +1,8 @@
 <template>
     <NavBar/>
     <div class="columns is-mobile is-centered">
-        <p v-if="this.record_type == 0" class="my-1 is-size-3">Изменение фотографии отбытия</p>
-        <p v-else="this.record_type == 1" class="my-1 is-size-3">Изменение фотографии прибытия</p>
+        <p v-if="this.record_type == 0" class="my-1 is-size-5">Изменение фотографии отбытия</p>
+        <p v-else="this.record_type == 1" class="my-1 is-size-5">Изменение фотографии прибытия</p>
     </div> 
     <div class="content">
         <p class="title is-size-5 has-text-centered">Загрузить фотографию:</p>
@@ -51,15 +51,15 @@ import axios from 'axios';
                 if (this.comment != '' && this.image != '') {             
                     const formData = new FormData;
                     formData.set('image', this.image);
-                    axios.post('http://127.0.0.1:8000/api/upload', formData)
+                    axios.post('http://192.168.1.85:8000/api/upload', formData)
                     .then((res) => {
-                            this.record.img = `http://localhost:8000/storage/${res.data}`;
+                            this.record.img = `http://192.168.1.85:8000/storage/${res.data}`;
                             this.record.id = localStorage.getItem("record_id");                        
                             this.record.comment = this.setComment;
-                            axios.post('http://127.0.0.1:8000/api/addChange', this.record)
+                            axios.post('http://192.168.1.85:8000/api/addChange', this.record)
                             .then((resp) => {
                                     console.log(resp);
-                                    axios.post('http://127.0.0.1:8000/api/editImage', this.record)
+                                    axios.post('http://192.168.1.85:8000/api/editImage', this.record)
                                 .then(() => {
                                     this.$router.push({name: 'RecordsList'})
                                 })
@@ -85,8 +85,8 @@ import NavBar from '../components/NavBar.vue'
     justify-content: center;
 }
 .customtextarea {
-    width:30%;
-    height:60px;
+    width:75%;
+    height:100px;
     resize: none
 }
 </style>

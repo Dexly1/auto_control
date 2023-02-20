@@ -65,13 +65,13 @@
         },
         methods: {
             getBrands() {
-                axios.get("http://127.0.0.1:8000/api/allBrands")
+                axios.get("http://192.168.1.85:8000/api/allBrands")
                 .then(({data}) => {
                     this.brands = data;
              })
             },
             getModels() {
-                axios.get("http://127.0.0.1:8000/api/allModelsByBrand/"+this.selectedBrand)
+                axios.get("http://192.168.1.85:8000/api/allModelsByBrand/"+this.selectedBrand)
                 .then(({data}) => {
                     this.models = data;
                     this.selectedModel = data[0].id;
@@ -84,7 +84,7 @@
                 this.auto.model_id = this.selectedModel;
                 this.auto.register_sign = this.enteredRegisterSign;
                 console.log(this.auto)
-                axios.post("http://127.0.0.1:8000/api/addAuto/", this.auto)
+                axios.post("http://192.168.1.85:8000/api/addAuto/", this.auto)
                 .then(({data}) => {
                     this.$router.push({name: 'AutosList'})
                 })

@@ -29,8 +29,24 @@
       <button @click="toAutosInPlace" class="button is-warning">На парковке</button>
       <button @click="toAutosOutPlace" class="button ml-3 is-warning">На выезде</button>
     </div>
-    <div class="content">
-    <div class="columns pt-5 is-mobile is-centered">
+    <div class="label pt-2 is-center">Выбор даты</div>
+    <div class="is-center">
+        <DatePicker v-model="date_in" :model-config="modelConfig">
+            <template v-slot="{ inputValue, inputEvents }">
+                <input
+                class="bg-white border px-2 py-1 rounded"
+                :value="inputValue"
+                v-on="inputEvents"
+                />
+            </template>
+        </DatePicker>
+    </div>
+    <div class="label pt-5 is-center">Поиск по номеру</div>
+    <div class="is-center">
+        <input type="search" name="search" v-model="search"/>
+    </div>
+    <div class="content scroll-outer">
+    <div class="ml-3 pt-5 is-mobile is-centered scroll-inner">
         <div class="columns pt-5 is-one-third has-text-centered">
             <table class="table is-striped">
                 <thead>
@@ -43,12 +59,11 @@
                         <th>Фото до отбытия</th>
                         <th>Дата прибытия</th>
                         <th>Фото по прибытию</th>
-                        <!-- <th>Картинка</th> -->
                         <th v-if="isAdmin">Действия</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in records" :key="item.id">
+                        <tr v-for="item in filteredData" :key="item.id">
                             <td>{{ item.id }}</td>
                             <td>{{ item.brand_name }}</td>
                             <td>{{ item.model_name }}</td>
@@ -113,18 +128,28 @@
 <script>
 import axios from 'axios';
 import NavBar from './NavBar.vue'
+import { Calendar, DatePicker } from 'v-calendar';
 
   export default {
     components: {
-        NavBar
+        NavBar,
+        DatePicker,
+        Calendar
     },
         data() {
             return {
-                records: {},
+                search: '',
+                records: [],
+                filter: [],
                 isAdmin: false,
                 showModule: false,
                 show: false,
-                selectedImgPath: 'http://localhost:8000/storage/WHdXlqwCqBEZONPfuhnQT8rhNqmu42GhfGuZyFL9.png'
+                selectedImgPath: '',
+                date_in: '',
+                modelConfig: {
+                    type: 'string',
+                    mask: 'YYYY-MM-DD'
+                },
             }
         },
         created() {
@@ -132,11 +157,21 @@ import NavBar from './NavBar.vue'
             let value = localStorage.getItem('user');
             if (value == 2)
                 this.isAdmin = true;
+            if (value == 0)
+                this.$router.push({name: "AuthPage"})
             this.getRecords();
+        },
+        computed: {
+            filteredData () {
+               this.filter = this.records.filter(r => {
+                     return r.register_sign.toLowerCase().includes(this.search.toLowerCase())})
+                return this.filter.filter(r => {
+                       return r.auto_time_in.toLowerCase().includes(this.date_in.toLowerCase())})                
+            }
         },
         methods: {
             getRecords() {
-                axios.get('http://127.0.0.1:8000/api/allRecords')
+                axios.get('http://192.168.1.85:8000/api/allRecords')
                 .then(({data}) => {
                     this.records = data;
                 })
@@ -148,7 +183,7 @@ import NavBar from './NavBar.vue'
                 this.$router.push({name: 'AutosOutPlace'});
             },
             deleteRecord(id) {
-                axios.get('http://127.0.0.1:8000/api/deleteAuto/'+id)
+                axios.get('http://192.168.1.85:8000/api/deleteAuto/'+id)
                 this.getRecords();
             },
             showWindow($img) {
@@ -161,7 +196,7 @@ import NavBar from './NavBar.vue'
             setAccessEditPhotoIn(id, value) {
                 const formData = new FormData;
                 formData.set('value', value);
-                axios.post('http://127.0.0.1:8000/api/accessEditIn/'+id, formData)
+                axios.post('http://192.168.1.85:8000/api/accessEditIn/'+id, formData)
                 .then((resp) => {
                     console.log(resp);
                     this.getRecords();
@@ -170,7 +205,7 @@ import NavBar from './NavBar.vue'
             setAccessEditPhotoOut(id, value) {
                 const formData = new FormData;
                 formData.set('value', value);
-                axios.post('http://127.0.0.1:8000/api/accessEditOut/'+id, formData)
+                axios.post('http://192.168.1.85:8000/api/accessEditOut/'+id, formData)
                 .then((resp) => {
                     console.log(resp);
                     this.getRecords();
@@ -184,12 +219,34 @@ import NavBar from './NavBar.vue'
             toRecordEdit(id) {
                 localStorage.setItem('record_edit', id);
                 this.$router.push({name: 'RecordEdit'})
+            },
+            test() {
+                console.log(this.date_in)
+                this.filteredDay();
             }
         }
     }
 </script>
 
 <style>
+
+@media (max-width: 1100px) { 
+    .scroll-outer {
+        overflow: hidden;
+    }
+    .scroll-inner {
+        overflow-x: auto;
+        overflow-y: scroll;
+        white-space: nowrap;
+    }
+    .scroll-inner::-webkit-scrollbar {
+        display: none;
+    }
+}
+.is-center {
+    display: flex;
+    justify-content: center;
+}
 .modal-mask {
   position: fixed;
   z-index: 9998;

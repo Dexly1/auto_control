@@ -44,7 +44,7 @@ import axios from 'axios';
         },
         methods: {
             auth(){
-                axios.get('http://127.0.0.1:8000/api/checkUser', {
+                axios.get('http://192.168.1.85:8000/api/checkUser', {
                     params: {
                         login: this.login,
                         password: this.password

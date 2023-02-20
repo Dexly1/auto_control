@@ -28,8 +28,8 @@
         <button class="button is-success">Добавить модель</button>
     </div>
     </form>
-    <div class="content">
-        <div class="columns pt-5 is-mobile is-centered">
+    <div class="content is-center scroll-outer">
+        <div class="pt-5 is-mobile is-centered scroll-inner">
             <div class="column is-one-third">
                 <table class="table is-striped">
                     <thead>
@@ -75,29 +75,31 @@ import axios from 'axios';
             }
         },
         mounted() {
+            if (localStorage.getItem("user") != 2)
+                this.$router.push({name: 'RecordsList'})
             this.getBrands(),
             this.getModels()
         },
         methods: {
             getBrands() {
-                axios.get('http://127.0.0.1:8000/api/allBrands')
+                axios.get('http://192.168.1.85:8000/api/allBrands')
                 .then(({data}) => {
                     this.brands = data;
                 })
             },
             getModels() {
-                axios.get('http://127.0.0.1:8000/api/allModels')
+                axios.get('http://192.168.1.85:8000/api/allModels')
                 .then(({data}) => {
                     this.models = data;
                 })
             },
             createNewModel() {
                 this.model.brand_id = this.selectedBrand;
-                axios.post('http://127.0.0.1:8000/api/addModel', this.model)
+                axios.post('http://192.168.1.85:8000/api/addModel', this.model)
                 .then(() => this.getModels())
             },
             deleteModel(id) {
-                axios.get('http://127.0.0.1:8000/api/deleteModel/'+id)
+                axios.get('http://192.168.1.85:8000/api/deleteModel/'+id)
                 this.getModels();
             }
         }

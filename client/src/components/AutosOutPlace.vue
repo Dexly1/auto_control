@@ -6,8 +6,8 @@
   <div class="is-center">
         <button @click="backToRecordsList" class="button ml-3 is-success">Вернуться к списку записей</button>
   </div> 
-  <div class="content">
-      <div class="columns pt-5 is-mobile is-centered">
+  <div class="content scroll-outer">
+      <div class="pt-5 is-mobile is-centered scroll-inner">
           <div class="columns pt-5 is-one-third has-text-centered">
               <table class="table is-striped">
                   <thead>
@@ -62,7 +62,7 @@ import axios from 'axios';
       },
       methods: {
           getAutos() {
-              axios.get('http://127.0.0.1:8000/api/allAutosOutPlace')
+              axios.get('http://192.168.1.85:8000/api/allAutosOutPlace')
               .then(({data}) => {
                   this.autos = data;
               })
@@ -73,13 +73,13 @@ import axios from 'axios';
             addAutoToInPlace(id) {
                 const formData = new FormData;
                 formData.set('image', this.image);
-                axios.post('http://127.0.0.1:8000/api/upload', formData)
+                axios.post('http://192.168.1.85:8000/api/upload', formData)
                 .then((res) => {
-                    this.auto.img_in = `http://localhost:8000/storage/${res.data}`;
+                    this.auto.img_in = `http://192.168.1.85:8000/storage/${res.data}`;
                     this.auto.auto_id = id;
                     console.log(this.auto.img_in);
                     console.log(id);
-                    axios.post('http://127.0.0.1:8000/api/updateRecord/'+id, this.auto)
+                    axios.post('http://192.168.1.85:8000/api/updateRecord/'+id, this.auto)
                     .then((res) => {
                         console.log(res)
                         this.getAutos();

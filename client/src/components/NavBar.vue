@@ -4,9 +4,14 @@
       <p class="navbar-item is-size-3">
         АК
       </p>
-    </div>
-    <div v-if="isAdmin" id="nav-links" class="navbar-menu is-active">
-      <div class="navbar-start">
+          <a v-on:click="showMenu = !showMenu" v-bind:class="{ 'is-active' : showMenu }" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+      </div>
+    <div class="navbar-menu" v-bind:class="{ 'is-active' : showMenu }">
+      <div v-if="isAdmin" class="navbar-start">
         <RouterLink to="/autos"><p class="navbar-item">
           Автомобили
         </p></RouterLink>
@@ -23,16 +28,16 @@
           Изменения
         </p></RouterLink>
       </div>
-    </div>
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-          <a @click="exit" class="button is-light">
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a @click="exit" class="button is-light">
           Выйти
           </a>
         </div>
       </div>
     </div>
+  </div>
   </nav>
 </template>
 
@@ -42,6 +47,7 @@
       return {
         isAuth: false,
         isAdmin: false,
+        showMenu: false
       }
     },
     mounted() {

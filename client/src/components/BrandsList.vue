@@ -16,8 +16,8 @@
         <button class="button is-success">Добавить марку</button>
     </div>
     </form>
-    <div class="content">
-        <div class="columns pt-5 is-mobile is-centered">
+    <div class="content is-center scroll-outer">
+        <div class="pt-5 is-mobile is-centered scroll-inner">
             <div class="column is-one-third">
                 <table class="table is-striped">
                     <thead>
@@ -59,21 +59,23 @@ import axios from 'axios';
             }
         },
         mounted() {
+            if (localStorage.getItem("user") != 2)
+                this.$router.push({name: 'RecordsList'})
             this.getBrands()
         },
         methods: {
             getBrands() {
-                axios.get('http://127.0.0.1:8000/api/allBrands')
+                axios.get('http://192.168.1.85:8000/api/allBrands')
                 .then(({data}) => {
                     this.brands = data;
                 })
             },
             createNewBrand() {
-                axios.post('http://127.0.0.1:8000/api/addBrand', this.brand)
+                axios.post('http://192.168.1.85:8000/api/addBrand', this.brand)
                 .then(() => this.getBrands())
             },
             deleteBrand(id) {
-                axios.get('http://127.0.0.1:8000/api/deleteBrand/'+id)
+                axios.get('http://192.168.1.85:8000/api/deleteBrand/'+id)
                 this.getBrands();
             }
         }

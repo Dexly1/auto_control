@@ -52,15 +52,15 @@
         <label v-if="isErrorIn" class="label pt-2 has-text-danger has-text-centered">Не все поля прибытия заполнены</label>
     </div>
     </form>
-    <div class="columns pt-5 is-mobile is-centered">
-            <div class="columns pt-5 is-one-third has-text-centered">
+    <div class="content is-center scroll-outer">
+        <div class="pt-5 is-mobile is-centered scroll-inner">
                 <table class="table is-striped">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Марка</th>
                             <th>Модель</th>
-                            <th>Регистрационный номер</th>
+                            <th>Рег. номер</th>
                             <th>Выбор транспорта</th>
                         </tr>
                     </thead>
@@ -108,7 +108,7 @@ import { Calendar, DatePicker } from 'v-calendar';
                 modelConfig: {
                     type: 'string',
                     mask: 'YYYY-MM-DD HH:mm:ss'
-        },
+                },
             }
         },
         mounted() {
@@ -120,7 +120,7 @@ import { Calendar, DatePicker } from 'v-calendar';
         },
         methods: {
             getRecord() {
-                axios.get('http://127.0.0.1:8000/api/getRecord/'+this.idRecord)
+                axios.get('http://192.168.1.85:8000/api/getRecord/'+this.idRecord)
                 .then((res) => {
                     this.selectedRecord = res.data;
                     this.selectAuto(this.selectedRecord.auto_id);
@@ -142,11 +142,11 @@ import { Calendar, DatePicker } from 'v-calendar';
                 {
                     const formData = new FormData;
                     formData.set('image', this.image_in)
-                    axios.post('http://127.0.0.1:8000/api/upload', formData)
+                    axios.post('http://192.168.1.85:8000/api/upload', formData)
                     .then((res) => {
-                        this.selectedRecord.img_in = `http://localhost:8000/storage/${res.data}`;
+                        this.selectedRecord.img_in = `http://192.168.1.85:8000/storage/${res.data}`;
                         this.selectedRecord.auto_time_in = this.date_in;
-                        axios.post("http://127.0.0.1:8000/api/editRecord", this.selectedRecord)
+                        axios.post("http://192.168.1.85:8000/api/editRecord", this.selectedRecord)
                         .then((res) => {
                             console.log(res);
                             this.$router.push({name: 'RecordsList'})
@@ -165,11 +165,11 @@ import { Calendar, DatePicker } from 'v-calendar';
                 {
                     const formData = new FormData;
                     formData.set('image', this.image_out)
-                    axios.post('http://127.0.0.1:8000/api/upload', formData)
+                    axios.post('http://192.168.1.85:8000/api/upload', formData)
                     .then((res) => {
-                        this.selectedRecord.img_out = `http://localhost:8000/storage/${res.data}`;
+                        this.selectedRecord.img_out = `http://192.168.1.85:8000/storage/${res.data}`;
                         this.selectedRecord.auto_time_out = this.date_out;
-                        axios.post("http://127.0.0.1:8000/api/editRecord", this.selectedRecord)
+                        axios.post("http://192.168.1.85:8000/api/editRecord", this.selectedRecord)
                         .then((res) => {
                             console.log(res);
                             this.$router.push({name: 'RecordsList'})
@@ -183,7 +183,7 @@ import { Calendar, DatePicker } from 'v-calendar';
                 if (this.selectedRecord.auto_id != this.selectedAuto)
                 {
                     this.selectedRecord.auto_id = this.selectedAuto;
-                    axios.post("http://127.0.0.1:8000/api/editRecord", this.selectedRecord)
+                    axios.post("http://192.168.1.85:8000/api/editRecord", this.selectedRecord)
                         .then((res) => {
                             console.log(res);
                             this.$router.push({name: 'RecordsList'})
@@ -191,7 +191,7 @@ import { Calendar, DatePicker } from 'v-calendar';
                 }
             },
             getAutos() {
-                axios.get('http://127.0.0.1:8000/api/allAutos')
+                axios.get('http://192.168.1.85:8000/api/allAutos')
                 .then(({data}) => {
                     this.autos = data;
                 })

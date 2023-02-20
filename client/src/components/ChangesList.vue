@@ -5,8 +5,14 @@
             <Transition name="modal">
                 <div v-if="show" class="modal-mask">
                     <div class="modal-container">
-                        <div class="modal-body">
+                        <div v-if="isImage" class="modal-body">
                             <img :src="selectedImgPath">
+                        </div>
+                        <div v-if="!isImage" class="modal-body">
+                            <div class="label is-center">
+                                Комментарий:
+                            </div>
+                            {{selectedComment}}
                         </div>
                          <div class="modal-footer">
                             <slot name="footer">
@@ -24,8 +30,8 @@
     <div class="columns is-mobile is-centered">
       <p class="my-1 is-size-2">Журнал изменений</p>
     </div> 
-    <div class="content">
-        <div class="columns pt-5 is-mobile is-centered">
+    <div class="content is-center scroll-outer">
+        <div class="pt-5 is-mobile is-centered scroll-inner">
             <div class="columns pt-5 is-one-third has-text-centered">
                 <table class="table is-striped">
                     <thead>
@@ -49,15 +55,19 @@
                             <td>{{ item.model_name }}</td>
                             <td>{{ item.register_sign }}</td>
                             <td>{{ item.record_id }}</td>
-                            <td>{{ item.comment }}</td>
+                            <td><div class="is-center">
+                                <button class="button is-small is-success" @click="showWindow(item.comment, false)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div></td>
                             <td>{{ item.record_type_name }}</td>
                             <td><div class="is-center">
-                                <button class="button is-small is-info" @click="showWindow(item.img_new)">
+                                <button class="button is-small is-info" @click="showWindow(item.img_new, true)">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div></td>
                             <td><div class="is-center">
-                                <button class="button is-small is-info" @click="showWindow(item.img_old)">
+                                <button class="button is-small is-link" @click="showWindow(item.img_old, true)">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div></td>
@@ -77,8 +87,10 @@ import axios from 'axios';
           return {
               changes: {},
               selectedImgPath: '',
+              selectedComment: '',
               showModule: false,
-              show: false
+              show: false,
+              isImage: true,
           }
       },
       created() {
@@ -89,13 +101,19 @@ import axios from 'axios';
       },
       methods: {
         getChanges() {
-              axios.get('http://127.0.0.1:8000/api/allChanges')
+              axios.get('http://192.168.1.85:8000/api/allChanges')
               .then(({data}) => {
                   this.changes = data;
               })
           },
-          showWindow($img) {
-                this.selectedImgPath = $img;
+          showWindow($value, $isImage) {
+                if ($isImage)
+                this.selectedImgPath = $value;
+                else
+                this.selectedComment =  $value;
+
+                this.isImage = $isImage;
+
                 if (this.show)
                 this.show = false;
                 else

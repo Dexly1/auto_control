@@ -6,8 +6,8 @@
     <div v-if="isAdmin" class="columns is-mobile is-centered pt-3">
         <button @click="toCreateNewAuto" class="button is-success">Добавить автомобиль</button>
     </div>
-    <div class="content">
-        <div class="columns pt-5 is-mobile is-centered">
+    <div class="content scroll-outer">
+        <div class="pt-5 is-mobile is-centered scroll-inner">
             <div class="columns pt-5 is-one-third has-text-centered">
                 <table class="table is-striped">
                     <thead>
@@ -49,8 +49,8 @@ import axios from 'axios';
             }
         },
         created() {
-            // if (localStorage.getItem("user") != 2)
-            //     this.$router.push({name: 'RecordsList'})
+            if (localStorage.getItem("user") != 2)
+                this.$router.push({name: 'RecordsList'})
             let value = localStorage.getItem('user');
             if (value == 2)
                 this.isAdmin = true;
@@ -58,7 +58,7 @@ import axios from 'axios';
         },
         methods: {
             getAutos() {
-                axios.get('http://127.0.0.1:8000/api/allAutos')
+                axios.get('http://192.168.1.85:8000/api/allAutos')
                 .then(({data}) => {
                     this.autos = data;
                 })
@@ -67,7 +67,7 @@ import axios from 'axios';
                 this.$router.push({name: 'AddAuto'});
             },
             deleteAuto(id) {
-                axios.get('http://127.0.0.1:8000/api/deleteAuto/'+id)
+                axios.get('http://192.168.1.85:8000/api/deleteAuto/'+id)
                 this.getAutos();
             }
         }
