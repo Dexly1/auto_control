@@ -32,6 +32,7 @@ Route::get('/deleteBrand/{id}', [AutoController::class, 'deleteBrand']);
 
 Route::get('/allRecords', [RecordController::class, 'allRecords']);
 Route::get('/getRecord/{id}', [RecordController::class, 'getRecord']);
+Route::get('/deleteRecord/{id}', [RecordController::class, 'deleteRecord']);
 Route::post('/editRecord', [RecordController::class, 'editRecord']);
 Route::get('/allRecordTypes', [RecordController::class, 'allRecordTypes']);
 Route::post('/upload', [RecordController::class, 'upload']);

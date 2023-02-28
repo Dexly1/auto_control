@@ -6,6 +6,10 @@
     <div class="is-center">
         <button @click="backToRecordsList" class="button ml-3 is-success">Вернуться к списку записей</button>
     </div>
+    <div class="label pt-5 is-center">Поиск по номеру</div>
+    <div class="is-center">
+        <input type="search" name="search" v-model="search"/>
+    </div>
     <div class="content scroll-outer">
       <div class="pt-5 is-mobile is-centered scroll-inner">
           <div class="columns pt-5 is-one-third has-text-centered">
@@ -20,7 +24,7 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr v-for="auto in autos" :key="auto.id">
+                      <tr v-for="auto in filteredData" :key="auto.id">
                           <td>{{ auto.id }}</td>
                           <td>{{ auto.brand_name }}</td>
                           <td>{{ auto.model_name }}</td>
@@ -42,16 +46,17 @@ import axios from 'axios';
   export default {
       data() {
           return {
-              autos: {},
-              isAdmin: false,
-              image: '',
-              auto: {
-                auto_id: '',
-                img_out: ''
-              },
-              record: {
-                current_record: ''  
-              }     
+            search: '',
+            autos: [],
+            isAdmin: false,
+            image: '',
+            auto: {
+            auto_id: '',
+            img_out: ''
+            },
+            record: {
+            current_record: ''  
+            }     
           }
       },
       created() {
@@ -60,6 +65,16 @@ import axios from 'axios';
               this.isAdmin = true;
           this.getAutos();
       },
+      computed: {
+            filteredData () {
+                let result = this.autos;
+                if (this.search) {
+                result = result.filter(a => {
+                    return a.register_sign.toLowerCase().includes(this.search.toLowerCase())})
+                }
+                return result;
+            }
+        },
       methods: {
           getAutos() {
               axios.get('http://192.168.1.85:8000/api/allAutosInPlace')

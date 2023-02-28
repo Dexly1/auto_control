@@ -114,7 +114,7 @@
                             <td>
                             <div v-if="isAdmin" class="is-flex">
                                 <button class="button is-small is-warning" @click="toRecordEdit(item.id)"><i class="fas fa-pencil-alt"></i></button>
-                                <button class="button is-small is-danger" @click="deleteAuto(item.id)"><i class="far fa-trash-alt"></i></button>
+                                <button class="button is-small is-danger" @click="deleteRecord(item.id)"><i class="far fa-trash-alt"></i></button>
                             </div>
                             </td>
                         </tr>
@@ -183,7 +183,7 @@ import { Calendar, DatePicker } from 'v-calendar';
                 this.$router.push({name: 'AutosOutPlace'});
             },
             deleteRecord(id) {
-                axios.get('http://192.168.1.85:8000/api/deleteAuto/'+id)
+                axios.get('http://192.168.1.85:8000/api/deleteRecord/'+id)
                 this.getRecords();
             },
             showWindow($img) {

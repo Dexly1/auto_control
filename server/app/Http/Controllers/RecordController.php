@@ -90,6 +90,11 @@ class RecordController extends Controller
         return response()->json("asd");
     }
 
+    public function deleteRecord($id){
+        $record = Record::findOrFail($id);
+        $record->delete();
+    }
+
     public function upload(Request $req) {
         $path = $req->file('image')->store('', 'public');       
 
